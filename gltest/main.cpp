@@ -81,28 +81,30 @@ int main(int argc, char *argv[]) {
 	GLuint _vbo = 0;
 
 	glGenVertexArrays(1, &_vao);
-    glBindVertexArray(_vao);
-    
-    // make and bind the VBO
-    glGenBuffers(1, &_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-    
-    // Put the three triangle verticies into the VBO
-    GLfloat vertexData[] = {
-        //  X     Y     Z
-         0.0f, 0.8f, 0.0f,
-        -0.8f,-0.8f, 0.0f,
-         0.8f,-0.8f, 0.0f,
-    };
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-    
-    // connect the xyz to the "vert" attribute of the vertex shader
-    glEnableVertexAttribArray(glGetAttribLocation(_program, "vert"));
-    glVertexAttribPointer(glGetAttribLocation(_program, "vert"), 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    
-    // unbind the VBO and VAO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+	glBindVertexArray(_vao);
+
+	// make and bind the VBO
+	glGenBuffers(1, &_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+
+	// Put the three triangle verticies into the VBO
+	GLfloat vertexData[] = {
+		//  X     Y     Z
+		 0.0f, 0.8f, 0.0f,
+		-0.8f,-0.8f, 0.0f,
+		 0.8f,-0.8f, 0.0f,
+	};
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+
+	// connect the xyz to the "vert" attribute of the vertex shader
+	glEnableVertexAttribArray(glGetAttribLocation(_program, "vert"));
+	glVertexAttribPointer(glGetAttribLocation(_program, "vert"), 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+	// unbind the VBO and VAO
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	glViewport(0, 0, 1024, 600);
 
 	bool _running = true;
 	while (_running) {
@@ -133,6 +135,10 @@ int main(int argc, char *argv[]) {
 
 		SDL_GL_SwapWindow(_window);
 	}
+
+	SDL_GL_DeleteContext(_context);
+	SDL_DestroyWindow(_window);
+	SDL_Quit();
 
 	return EXIT_SUCCESS;
 }
