@@ -6,11 +6,23 @@
 #include <string>
 #include <vector>
 
-#include <OpenGL/GL3.h>
+#ifdef WIN32
+#include <GL/glew.h>
+#elif __APPLE__
+#include <OpenGL/glew.h>
+#else
+#include <GL3/gl3.h>
+#endif
 
 #include <boost/assign/list_of.hpp>
 
+#ifdef WIN32
+#include <SDL.h>
+#elif __APPLE__
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
 
 #include "eventable.hpp"
 #include "glerror.h"
@@ -83,6 +95,9 @@ class Engine : public Singleton<Engine> {
 			if ((_window = SDL_CreateWindow(_title.c_str(), _pos.x, _pos.y, _size.x, _size.y, _windowFlags)) == NULL) {throw SDL_GetError();}
 
 			if ((_context = SDL_GL_CreateContext(_window)) == NULL) {throw SDL_GetError();}
+
+			glewExperimental=TRUE;
+			if(glewInit() != GLEW_OK) {throw exception();}
 
 			checkAttributes();
 			if (glError()) {throw exception();}
