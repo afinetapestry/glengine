@@ -31,6 +31,12 @@ public:
 		glGenBuffers(1, &_vbo);
 		_glException();
 	}
+	~Renderable() {
+		glDeleteBuffers(1, &_vbo); _vbo = 0;
+		_glException();
+		glDeleteVertexArrays(1, &_vao); _vao = 0;
+		_glException();
+	}
 
 	virtual vector<GLfloat> & submit() {
 		return _data;

@@ -35,9 +35,8 @@ class Program {
 		}
 		~Program() {
 			if (_program != 0) {
-				glDeleteProgram(_program);
+				glDeleteProgram(_program); _program = 0;
 				_glException();
-				_program = 0;
 			}
 		}
 
