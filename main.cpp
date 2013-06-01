@@ -39,8 +39,7 @@ class Cube : public Renderable {
 		}
 };
 
-int main(int argc, char *argv[]) {
-
+int __cdecl main(int argc, char *argv[]) {
 	Engine engine = Engine::GetInstance();
 	engine.init();
 	engine._targetFPS = 60;

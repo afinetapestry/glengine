@@ -159,7 +159,7 @@ class Program {
 		  GLuint  	v2,
 		  GLuint  	v3);*/
 
-		static string GetInfoLog(GLuint object, void (__stdcall * glGet__iv)(GLuint, GLenum, GLint *), void (__stdcall * glGet__InfoLog)(GLuint, GLsizei, GLsizei *, GLchar *)) {
+		static string GetInfoLog(GLuint object, void (_GL_CALL *glGet__iv)(GLuint, GLenum, GLint *), void (_GL_CALL *glGet__InfoLog)(GLuint, GLsizei, GLsizei *, GLchar *)) {
 			GLint length;
 			string log;
 			glGet__iv(object, GL_INFO_LOG_LENGTH, &length);
