@@ -1,6 +1,8 @@
 #include <string>
 
 #include "engine.hpp"
+#include "gl.h"
+#include "glexception.hpp"
 #include "program.hpp"
 
 using namespace std;
@@ -9,9 +11,9 @@ class Cube : public Renderable {
 	public:
 		Cube(Program & program) : Renderable(program) {
 			glBindVertexArray(_vao);
-			if (glError()) {throw exception();}
+			_glException();
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			if (glError()) {throw exception();}
+			_glException();
 			GLfloat data[] = {
 				//  X     Y     Z
 				0.0f, 0.8f, 0.0f,
@@ -19,17 +21,17 @@ class Cube : public Renderable {
 				0.8f, -0.8f, 0.0f,
 			};
 			glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-			if (glError()) {throw exception();}
+			_glException();
 			glEnableVertexAttribArray(_program.attrib("vert"));
-			if (glError()) {throw exception();}
+			_glException();
 			glVertexAttribPointer(_program.attrib("vert"), 3, GL_FLOAT, GL_FALSE, 0, NULL);
-			if (glError()) {throw exception();}
+			_glException();
 			_first = 0;
 			_count = 3;
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			if (glError()) {throw exception();}
+			_glException();
 			glBindVertexArray(0);
-			if (glError()) {throw exception();}
+			_glException();
 		}
 };
 
@@ -38,10 +40,7 @@ int main(int argc, char *argv[]) {
 	engine.init();
 	engine._targetFPS = 60;
 
-	Program program;
-	program.addFile("simple.vert", GL_VERTEX_SHADER);
-	program.addFile("simple.frag", GL_FRAGMENT_SHADER);
-	program.link();
+	Program program("simple.vert", "simple.frag");
 
 	Cube cube(program);
 	engine.addRenderHandler(&cube);

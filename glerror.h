@@ -5,14 +5,14 @@
 extern "C" {
 #endif
  
-int _glError(const char *file, int line);
+const char * __glError(const char *, const int);
  
 ///
 /// Usage
 /// [... some opengl calls]
 /// glCheckError();
 ///
-#define glError() _glError(__FILE__, __LINE__)
+#define _glError() __glError(__FILE__, __LINE__)
 
 #ifdef _CPLUSPLUS
 }

@@ -3,9 +3,10 @@
 
 #include <vector>
 
-#include <OpenGL/GL3.h>
-
 #include "program.hpp"
+
+#include "gl.h"
+#include "glexception.hpp"
 
 using namespace std;
 
@@ -26,7 +27,9 @@ public:
 									_count(0),
 									_program(program) {
 		glGenVertexArrays(1, &_vao);
+		_glException();
 		glGenBuffers(1, &_vbo);
+		_glException();
 	}
 
 	virtual vector<GLfloat> & submit() {
@@ -36,9 +39,13 @@ public:
 	virtual void render() {
 		_program.use();
 		glBindVertexArray(_vao);
+		_glException();
 		glDrawArrays(_mode, _first, _count);
+		_glException();
 		glBindVertexArray(0);
+		_glException();
 		glUseProgram(0);
+		_glException();
 	}
 };
 
