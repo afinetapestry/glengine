@@ -1,7 +1,16 @@
 #include <string>
 
+#ifdef WIN32
+#include <GL/glew.h>
+#elif __APPLE__
+#include <OpenGL/glew.h>
+#else
+#include <GL3/gl3.h>
+#endif
+
 #include "engine.hpp"
 #include "program.hpp"
+#undef main
 
 using namespace std;
 
@@ -34,6 +43,7 @@ class Cube : public Renderable {
 };
 
 int main(int argc, char *argv[]) {
+
 	Engine engine = Engine::GetInstance();
 	engine.init();
 	engine._targetFPS = 60;

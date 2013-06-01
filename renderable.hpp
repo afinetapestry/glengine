@@ -3,7 +3,14 @@
 
 #include <vector>
 
-#include <OpenGL/GL3.h>
+
+#ifdef WIN32
+#include <GL/glew.h>
+#elif __APPLE__
+#include <OpenGL/glew.h>
+#else
+#include <GL3/gl3.h>
+#endif
 
 #include "program.hpp"
 

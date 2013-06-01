@@ -6,7 +6,15 @@
 #include <map>
 #include <string>
 
-#include <OpenGL/GL3.h>
+#ifdef WIN32
+#include <Windows.h>
+#include <GL/glew.h>
+#elif __APPLE__
+#include <OpenGL/glew.h>
+#else
+#include <GL3/gl3.h>
+#endif
+
 
 using namespace std;
 
@@ -17,8 +25,7 @@ class Program {
 		map<string, GLint> _uniforms;
 		map<string, GLint> _attrib;
 
-		Program() :	_linked(false),
-					_program(0) {
+		Program() :	_linked(false), _program(0) {
 			_program = glCreateProgram();
 			if (glError()) {throw exception();}
 		}
@@ -44,7 +51,7 @@ class Program {
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 			if (glError()) {throw exception();}
 			if (!status) {
-				string log = GetInfoLog(shader, glGetShaderiv, glGetShaderInfoLog);
+				string log = GetInfoLog(shader, *glGetShaderiv, *glGetShaderInfoLog);
 				cerr << log << endl;
 				throw exception();
 			}
@@ -59,7 +66,7 @@ class Program {
 			glGetProgramiv(_program, GL_LINK_STATUS, &status);
 			if (glError()) {throw exception();}
 			if (!status) {
-				string log = GetInfoLog(_program, glGetProgramiv, glGetProgramInfoLog);
+				string log = GetInfoLog(_program, *glGetProgramiv, *glGetProgramInfoLog);
 				cerr << log << endl;
 				throw exception();
 			}
@@ -143,7 +150,7 @@ class Program {
 		  GLuint  	v2,
 		  GLuint  	v3);*/
 
-		static string GetInfoLog(GLuint object, void (*glGet__iv)(GLuint, GLenum, GLint *), void (*glGet__InfoLog)(GLuint, GLsizei, GLsizei *, GLchar *)) {
+		static string GetInfoLog(GLuint object, void (__stdcall *glGet__iv)(GLuint, GLenum, GLint *), void (__stdcall *glGet__InfoLog)(GLuint, GLsizei, GLsizei *, GLchar *)) {
 			GLint length;
 			string log;
 			glGet__iv(object, GL_INFO_LOG_LENGTH, &length);
