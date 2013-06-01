@@ -8,7 +8,13 @@
 
 #include <boost/assign/list_of.hpp>
 
+#ifdef WIN32
+#include <SDL.h>
+#elif __APPLE__
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
 
 #include "eventable.hpp"
 #include "gl.h"
@@ -82,6 +88,9 @@ class Engine : public Singleton<Engine> {
 			if ((_window = SDL_CreateWindow(_title.c_str(), _pos.x, _pos.y, _size.x, _size.y, _windowFlags)) == NULL) {throw SDL_GetError();}
 
 			if ((_context = SDL_GL_CreateContext(_window)) == NULL) {throw SDL_GetError();}
+
+			glewExperimental = GL_TRUE;
+			if (glewInit() != GLEW_OK) {throw exception();}
 
 			checkAttributes();
 			_glException();

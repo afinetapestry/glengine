@@ -11,6 +11,10 @@
 
 using namespace std;
 
+#ifndef WIN32
+#define __stdcall
+#endif
+
 class Program {
 	public:
 		bool _linked;
@@ -56,7 +60,7 @@ class Program {
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 			_glException();
 			if (!status) {
-				string log = GetInfoLog(shader, glGetShaderiv, glGetShaderInfoLog);
+				string log = GetInfoLog(shader, *glGetShaderiv, *glGetShaderInfoLog);
 				cerr << log << endl;
 				throw exception();
 			}
@@ -71,7 +75,7 @@ class Program {
 			glGetProgramiv(_program, GL_LINK_STATUS, &status);
 			_glException();
 			if (!status) {
-				string log = GetInfoLog(_program, glGetProgramiv, glGetProgramInfoLog);
+				string log = GetInfoLog(_program, *glGetProgramiv, *glGetProgramInfoLog);
 				cerr << log << endl;
 				throw exception();
 			}
@@ -155,7 +159,7 @@ class Program {
 		  GLuint  	v2,
 		  GLuint  	v3);*/
 
-		static string GetInfoLog(GLuint object, void (*glGet__iv)(GLuint, GLenum, GLint *), void (*glGet__InfoLog)(GLuint, GLsizei, GLsizei *, GLchar *)) {
+		static string GetInfoLog(GLuint object, void (__stdcall * glGet__iv)(GLuint, GLenum, GLint *), void (__stdcall * glGet__InfoLog)(GLuint, GLsizei, GLsizei *, GLchar *)) {
 			GLint length;
 			string log;
 			glGet__iv(object, GL_INFO_LOG_LENGTH, &length);

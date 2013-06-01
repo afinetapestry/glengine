@@ -1,5 +1,7 @@
-#ifdef WIN32
 #include <GL/glew.h>
+
+#ifdef WIN32
+#include <Windows.h>
 #elif __APPLE__
 #include <OpenGL/gl3.h>
 #else
