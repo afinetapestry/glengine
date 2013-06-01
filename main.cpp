@@ -8,8 +8,11 @@
 #include <GL3/gl3.h>
 #endif
 
+
+
 #include "engine.hpp"
 #include "program.hpp"
+
 #undef main
 
 using namespace std;
@@ -42,12 +45,11 @@ class Cube : public Renderable {
 		}
 };
 
-int main(int argc, char *argv[]) {
-
+int __cdecl main(int argc, char *argv[]) {
 	Engine engine = Engine::GetInstance();
 	engine.init();
 	engine._targetFPS = 60;
-
+	
 	Program program;
 	program.addFile("simple.vert", GL_VERTEX_SHADER);
 	program.addFile("simple.frag", GL_FRAGMENT_SHADER);

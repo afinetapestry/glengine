@@ -1,8 +1,6 @@
-#ifdef _CPLUSPLUS
+#ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "glerror.h"
 
 #include <stdio.h>
 
@@ -32,7 +30,7 @@ int _glError(const char * file, int line) {
 	return ret;
 }
 
-#ifdef _CPLUSPLUS
+#ifdef __cplusplus
 }
 #endif
 

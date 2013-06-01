@@ -1,7 +1,7 @@
 #ifndef __GLERROR_H__
 #define __GLERROR_H__
 
-#ifdef _CPLUSPLUS
+#ifdef __cplusplus
 extern "C" {
 #endif
  
@@ -14,7 +14,7 @@ int _glError(const char *file, int line);
 ///
 #define glError() _glError(__FILE__, __LINE__)
 
-#ifdef _CPLUSPLUS
+#ifdef __cplusplus
 }
 #endif
  
