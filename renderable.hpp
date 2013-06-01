@@ -3,16 +3,11 @@
 
 #include <vector>
 
-#include <OpenGL/GL.h>
+#include <OpenGL/GL3.h>
 
 #include "program.hpp"
 
 using namespace std;
-
-#ifdef __APPLE__
-#define glGenVertexArrays glGenVertexArraysAPPLE
-#define glBindVertexArray glBindVertexArrayAPPLE
-#endif
 
 class Renderable {
 public:

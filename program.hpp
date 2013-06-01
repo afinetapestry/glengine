@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 
-#include <OpenGL/GL.h>
+#include <OpenGL/GL3.h>
 
 using namespace std;
 
@@ -20,15 +20,14 @@ class Program {
 		Program() :	_linked(false),
 					_program(0) {
 			_program = glCreateProgram();
-		}
-		Program(const string & vert, const string & frag) {
-			Program();
-			addFile(vert, GL_VERTEX_SHADER);
-			addFile(frag, GL_FRAGMENT_SHADER);
-			link();
+			if (glError()) {throw exception();}
 		}
 		~Program() {
-			if (_program != 0) {glDeleteProgram(_program); _program = 0;}
+			if (_program != 0) {
+				glDeleteProgram(_program);
+				if (glError()) {throw exception();}
+				_program = 0;
+			}
 		}
 
 		void addFile(const string & filename, GLenum type) {
@@ -36,22 +35,29 @@ class Program {
 			const char * str = source.c_str();
 			int length = source.length();
 			GLuint shader = glCreateShader(type);
+			if (glError()) {throw exception();}
 			GLint status;
 			glShaderSource(shader, 1, &str, &length);
+			if (glError()) {throw exception();}
 			glCompileShader(shader);
+			if (glError()) {throw exception();}
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+			if (glError()) {throw exception();}
 			if (!status) {
 				string log = GetInfoLog(shader, glGetShaderiv, glGetShaderInfoLog);
 				cerr << log << endl;
 				throw exception();
 			}
 			glAttachShader(_program, shader);
+			if (glError()) {throw exception();}
 		}
 
 		void link() {
 			glLinkProgram(_program);
+			if (glError()) {throw exception();}
 			GLint status;
 			glGetProgramiv(_program, GL_LINK_STATUS, &status);
+			if (glError()) {throw exception();}
 			if (!status) {
 				string log = GetInfoLog(_program, glGetProgramiv, glGetProgramInfoLog);
 				cerr << log << endl;
@@ -63,6 +69,7 @@ class Program {
 		void use() {
 			if (!_linked) {link();}
 			glUseProgram(_program);
+			if (glError()) {throw exception();}
 		}
 
 		GLint uniform(const string & name) {
@@ -70,6 +77,7 @@ class Program {
 			GLint location;
 			if ((i = _uniforms.find(name)) == _uniforms.end()) {
 				location = _uniforms[name] = glGetUniformLocation(_program, name.c_str());
+				if (glError()) {throw exception();}
 			} else {
 				location = _uniforms[name];
 			}
@@ -80,7 +88,8 @@ class Program {
 			map<string, GLint>::iterator i;
 			GLint location;
 			if ((i = _attrib.find(name)) == _attrib.end()) {
-				location = _attrib[name] = glGetUniformLocation(_program, name.c_str());
+				location = _attrib[name] = glGetAttribLocation(_program, name.c_str());
+				if (glError()) {throw exception();}
 			} else {
 				location = _attrib[name];
 			}
@@ -90,6 +99,7 @@ class Program {
 		void uniform1f(const string & name, float v0) {
 			GLint location = uniform(name);
 			glUniform1f(location, v0);
+			if (glError()) {throw exception();}
 		}
 
 		/*void glUniform2f(	GLint  	location,
@@ -137,8 +147,10 @@ class Program {
 			GLint length;
 			string log;
 			glGet__iv(object, GL_INFO_LOG_LENGTH, &length);
+			if (glError()) {throw exception();}
 			log.reserve(length);
 			glGet__InfoLog(object, length, NULL, &log[0]);
+			if (glError()) {throw exception();}
 			return log;
 		}
 

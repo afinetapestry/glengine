@@ -6,13 +6,14 @@
 #include <string>
 #include <vector>
 
-#include <OpenGL/GL.h>
+#include <OpenGL/GL3.h>
 
 #include <boost/assign/list_of.hpp>
 
 #include <SDL2/SDL.h>
 
 #include "eventable.hpp"
+#include "glerror.h"
 #include "renderable.hpp"
 #include "singleton.hpp"
 #include "types.h"
@@ -84,6 +85,7 @@ class Engine : public Singleton<Engine> {
 			if ((_context = SDL_GL_CreateContext(_window)) == NULL) {throw SDL_GetError();}
 
 			checkAttributes();
+			if (glError()) {throw exception();}
 		}
 
 		string & title(string & title) {
@@ -97,6 +99,7 @@ class Engine : public Singleton<Engine> {
 		void run() {
 			reshape();
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			if (glError()) {throw exception();}
 
 			_running = true;
 			_delayTick = _updateTick = SDL_GetTicks();
@@ -152,6 +155,7 @@ class Engine : public Singleton<Engine> {
 
 		void doRender() {
 			glClear(GL_COLOR_BUFFER_BIT);
+			if (glError()) {throw exception();}
 
 			for (vector<Renderable *>::iterator i = _renderHandlers.begin(); i != _renderHandlers.end(); ++i) {
 				(*i)->render();
@@ -162,6 +166,7 @@ class Engine : public Singleton<Engine> {
 
 		void reshape() {
 			glViewport(0, 0, _size.x, _size.y);
+			if (glError()) {throw exception();}
 		}
 
 		void addEventHandler(Eventable * obj) {_eventHandlers.push_back(obj);}
