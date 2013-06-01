@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 
 #include "gl.h"
@@ -15,3 +19,6 @@ const char * __glError(const char * file, const int line) {
 	}
 }
 
+#ifdef __cplusplus
+}
+#endif
