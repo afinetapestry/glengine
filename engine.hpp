@@ -6,14 +6,6 @@
 #include <string>
 #include <vector>
 
-#ifdef WIN32
-#include <GL/glew.h>
-#elif __APPLE__
-#include <OpenGL/glew.h>
-#else
-#include <GL3/gl3.h>
-#endif
-
 #include <boost/assign/list_of.hpp>
 
 #ifdef WIN32
@@ -25,6 +17,7 @@
 #endif
 
 #include "eventable.hpp"
+#include "gl.h"
 #include "glerror.h"
 #include "renderable.hpp"
 #include "singleton.hpp"
@@ -96,11 +89,11 @@ class Engine : public Singleton<Engine> {
 
 			if ((_context = SDL_GL_CreateContext(_window)) == NULL) {throw SDL_GetError();}
 
-			glewExperimental=TRUE;
-			if(glewInit() != GLEW_OK) {throw exception();}
+			glewExperimental = GL_TRUE;
+			if (glewInit() != GLEW_OK) {throw exception();}
 
 			checkAttributes();
-			if (glError()) {throw exception();}
+			_glException();
 		}
 
 		string & title(string & title) {
@@ -114,7 +107,7 @@ class Engine : public Singleton<Engine> {
 		void run() {
 			reshape();
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			if (glError()) {throw exception();}
+			_glException();
 
 			_running = true;
 			_delayTick = _updateTick = SDL_GetTicks();
@@ -170,7 +163,7 @@ class Engine : public Singleton<Engine> {
 
 		void doRender() {
 			glClear(GL_COLOR_BUFFER_BIT);
-			if (glError()) {throw exception();}
+			_glException();
 
 			for (vector<Renderable *>::iterator i = _renderHandlers.begin(); i != _renderHandlers.end(); ++i) {
 				(*i)->render();
@@ -181,7 +174,7 @@ class Engine : public Singleton<Engine> {
 
 		void reshape() {
 			glViewport(0, 0, _size.x, _size.y);
-			if (glError()) {throw exception();}
+			_glException();
 		}
 
 		void addEventHandler(Eventable * obj) {_eventHandlers.push_back(obj);}
