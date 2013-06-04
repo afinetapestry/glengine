@@ -11,10 +11,6 @@
 
 using namespace std;
 
-#ifndef WIN32
-#define __stdcall
-#endif
-
 class Program {
 	public:
 		bool _linked;
@@ -60,8 +56,7 @@ class Program {
 			_glException();
 			if (!status) {
 				string log = GetInfoLog(shader, *glGetShaderiv, *glGetShaderInfoLog);
-				cerr << log << endl;
-				throw exception();
+				throw runtime_error(log);
 			}
 			glAttachShader(_program, shader);
 			_glException();
@@ -75,8 +70,7 @@ class Program {
 			_glException();
 			if (!status) {
 				string log = GetInfoLog(_program, *glGetProgramiv, *glGetProgramInfoLog);
-				cerr << log << endl;
-				throw exception();
+				throw runtime_error(log);
 			}
 			_linked = true;
 		}
@@ -84,6 +78,11 @@ class Program {
 		void use() {
 			if (!_linked) {link();}
 			glUseProgram(_program);
+			_glException();
+		}
+
+		void discard() {
+			glUseProgram(0);
 			_glException();
 		}
 

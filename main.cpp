@@ -5,10 +5,6 @@
 #include "glexception.hpp"
 #include "program.hpp"
 
-#ifdef WIN32
-#undef main
-#endif
-
 using namespace std;
 
 class Cube : public Renderable {
@@ -39,7 +35,7 @@ class Cube : public Renderable {
 		}
 };
 
-int __cdecl main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 	Engine engine = Engine::GetInstance();
 	engine.init();
 	engine._targetFPS = 60;

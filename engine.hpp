@@ -1,14 +1,15 @@
 #ifndef __ENGINE_HPP__
 #define __ENGINE_HPP__
 
-#include <exception>
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include <boost/assign/list_of.hpp>
 
 #ifdef WIN32
+#undef main
 #include <SDL.h>
 #elif __APPLE__
 #include <SDL2/SDL.h>
@@ -76,21 +77,21 @@ class Engine : public Singleton<Engine> {
 			for (map<SDL_GLattr, int>::iterator i = _glAttributes.begin(); i != _glAttributes.end(); ++i) {
 				int value;
 				SDL_GL_GetAttribute(i->first, &value);
-				if (value != i->second) {throw exception();}
+				if (value != i->second) {throw runtime_error("attribute mismatch");}
 			}
 		}
 
 		void init(Uint32 flags = SDL_INIT_EVERYTHING) {
-			if (SDL_Init(flags) < 0) {throw SDL_GetError();}
+			if (SDL_Init(flags) < 0) {throw runtime_error(SDL_GetError());}
 
 			setAttributes();
 
-			if ((_window = SDL_CreateWindow(_title.c_str(), _pos.x, _pos.y, _size.x, _size.y, _windowFlags)) == NULL) {throw SDL_GetError();}
+			if ((_window = SDL_CreateWindow(_title.c_str(), _pos.x, _pos.y, _size.x, _size.y, _windowFlags)) == NULL) {throw runtime_error(SDL_GetError());}
 
-			if ((_context = SDL_GL_CreateContext(_window)) == NULL) {throw SDL_GetError();}
+			if ((_context = SDL_GL_CreateContext(_window)) == NULL) {throw runtime_error(SDL_GetError());}
 
 			glewExperimental = GL_TRUE;
-			if (glewInit() != GLEW_OK) {throw exception();}
+			if (glewInit() != GLEW_OK) {throw runtime_error("glew init failed");}
 
 			checkAttributes();
 			_glException();
